@@ -56,6 +56,13 @@ class MainActivity : AppCompatActivity() {
                 edtValue.requestFocus()
             }
         }
+
+        val btnClear: Button = findViewById(R.id.btnClear)
+        btnClear.setOnClickListener{
+            edtValue.setText("")
+            edtValue.error = null
+            spConversions.setSelection(0)
+        }
     }
 
     private fun showResult(
