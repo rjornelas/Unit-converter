@@ -1,5 +1,6 @@
 package com.example.unit_converter
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -23,8 +24,7 @@ class MainActivity : AppCompatActivity() {
         CalculationStrategyHolder("Kilometer to centimeter", KilometerToCentimerStrategy()),
         CalculationStrategyHolder("Kilometer to meter", KilometerToMeterStrategy()),
         CalculationStrategyHolder("Meter to centimeter", MeterToCentimeterStrategy()),
-        CalculationStrategyHolder("Meter to kilometer", MeterToKilometerStrategy()),
-
+        CalculationStrategyHolder("Meter to kilometer", MeterToKilometerStrategy())
         )
 
 
@@ -47,7 +47,9 @@ class MainActivity : AppCompatActivity() {
                 val selectItemPosition = spConversions.selectedItemPosition
                 val calculatorStrategy = supportedCalculatorStrategies[selectItemPosition].calculatorStrategy
                 Calculator.setCalculationStrategy(calculatorStrategy)
-                Calculator.calculate(value)
+                val result = Calculator.calculate(value)
+
+                showResult(result, calculatorStrategy)
 
             }catch (e: NumberFormatException){
                 edtValue.error = "Invalid value"
@@ -55,6 +57,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun showResult(
+        result: Double,
+        calculatorStrategy: CalculatorStrategy
+    ) {
+        val intent = Intent(this, ResultActivity::class.java)
+        intent.putExtra("Result", result)
+        intent.putExtra("Label", calculatorStrategy.getResultLabel(checkPlural(result)))
+        startActivity(intent)
+    }
+
+    private fun checkPlural(result: Double) = result > 1
 
     private fun setUi() {
         spConversions = findViewById(R.id.spConversions)
